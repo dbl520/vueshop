@@ -1,0 +1,21 @@
+var vm=new Vue({
+	el:"#app",
+	data:{
+		author:"CanCan",
+		shopList:[],
+	},
+	mounted:function(){
+		this.$nextTick(function(){
+			this.getJson();
+		})
+	},
+	methods:{
+		getJson:function(){
+			this.$http.get("data/cartData.json").then(function(res){
+				console.log("成功");
+			},function(res){
+				this.shopList=res.data.result.list;
+			});
+		}
+	}
+});
