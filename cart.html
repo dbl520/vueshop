@@ -8,6 +8,7 @@
     <link href="css/base.css" rel="stylesheet">
     <link href="css/checkout.css" rel="stylesheet">
     <link href="css/modal.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="layui/css/layui.css">
     <style type="text/css">
         .quantity input {
             width: 40px;
@@ -58,22 +59,22 @@
                       </div>
                     </div>
                     <div class="cart-tab-2">
-                      <div class="item-price">{{item.productPrice}}</div>
+                      <div class="item-price">{{item.productPrice|changePrice}}</div>
                     </div>
                     <div class="cart-tab-3">
                       <div class="item-quantity">
                         <div class="select-self select-self-open">
                           <div class="quantity">
-                            <a href="javascript:">-</a>
-                            <input type="text" value="0" disabled>
-                            <a href="javascript:">+</a>
+                            <a class="layui-btn layui-btn-primary layui-btn-small" href="javascript:" @click="changeNumber(item,-1)"><i class="layui-icon">&#xe603;</i></a>
+                            <input type="text" value="0" disabled v-model="item.productQuantity">
+                            <a class="layui-btn layui-btn-primary layui-btn-small" href="javascript:" @click="changeNumber(item,1)"><i class="layui-icon">&#xe602;</i></a>
                           </div>
                         </div>
                         <div class="item-stock">有货</div>
                       </div>
                     </div>
                     <div class="cart-tab-4">
-                      <div class="item-price-total">0.00</div>
+                      <div class="item-price-total">{{item.productPrice*item.productQuantity|changePrice}}</div>
                     </div>
                     <div class="cart-tab-5">
                       <div class="cart-item-operation">

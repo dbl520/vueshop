@@ -4,6 +4,19 @@ var vm=new Vue({
 		author:"CanCan",
 		shopList:[],
 	},
+	watch:{
+		shopList:{
+			handler:function(){
+
+			},
+			deep:true
+		}
+	},
+	filters:{
+		changePrice:function(value){
+			return "￥"+value.toFixed(2);
+		}
+	},
 	mounted:function(){
 		this.$nextTick(function(){
 			this.getJson();
@@ -16,6 +29,16 @@ var vm=new Vue({
 			},function(res){
 				this.shopList=res.data.result.list;
 			});
+		},
+		changeNumber:function(item,flag){
+			if(flag>0){
+				item.productQuantity++;
+			}
+			else{
+				item.productQuantity--;	
+				if(item.productQuantity<1)
+					item.productQuantity=1;
+			}
 		}
 	}
 });
