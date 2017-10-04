@@ -42,7 +42,7 @@
                   <li v-for="item in shopList">
                     <div class="cart-tab-1">
                       <div class="cart-item-check">
-                        <a href="javascript:void 0" class="item-check-btn">
+                        <a href="javascript:void 0" class="item-check-btn" @click="select(item)" v-bind:class="{'check':item.checked}">
                         </a>
                       </div>
                       <div class="cart-item-pic">
@@ -92,14 +92,14 @@
               <div class="cart-foot-l">
                 <div class="item-all-check">
                   <a>
-                    <span class="item-check-btn" >
+                    <span class="item-check-btn" v-bind:class="{'check':checkAll}" @click="selectAll(true)">
                     </span>
-                    <span style="cursor: pointer;">全选</span>
+                    <span style="cursor: pointer;" @click="selectAll(true)">全选</span>
                   </a>
                 </div>
                 <div class="item-all-del">
                   <a class="item-del-btn">
-                    <span style="cursor: pointer;margin-left: 20px;">取消全选</span>
+                    <span style="cursor: pointer;margin-left: 20px;" @click="selectAll(false)">取消全选</span>
                   </a>
                 </div>
               </div>

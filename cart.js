@@ -3,11 +3,18 @@ var vm=new Vue({
 	data:{
 		author:"CanCan",
 		shopList:[],
+		checkAll:false
 	},
 	watch:{
 		shopList:{
 			handler:function(){
-
+				flag1=this.shopList[0].checked;
+				flag2=this.shopList[1].checked;
+				flag3=this.shopList[2].checked;
+				if(flag1&&flag2&&flag3)
+					this.checkAll=true;
+				else
+					this.checkAll=false;
 			},
 			deep:true
 		}
@@ -38,6 +45,36 @@ var vm=new Vue({
 				item.productQuantity--;	
 				if(item.productQuantity<1)
 					item.productQuantity=1;
+			}
+		},
+		select:function(item){
+			if (!item.checked) {
+				this.$set(item,"checked",true);
+			}
+			else
+				item.checked=!item.checked;
+		},
+		selectAll:function(flag){
+			var _this=this;
+			if(flag){
+				this.checkAll=true;
+				this.shopList.forEach(function(ele){
+					if (!ele.checked) {
+						_this.$set(ele,"checked",true);
+					}
+					else
+						ele.checked=true;
+				});
+			}
+			else{
+				this.checkAll=false;
+				this.shopList.forEach(function(ele){
+					if(!ele.checked){
+						_this.$set(ele,"checked",false);
+					}
+					else
+						ele.checked=false;
+				});
 			}
 		}
 	}
