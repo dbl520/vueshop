@@ -3,18 +3,21 @@ var vm=new Vue({
 	data:{
 		author:"CanCan",
 		shopList:[],
-		checkAll:false
+		checkAll:false,
+		total:0
 	},
 	watch:{
 		shopList:{
 			handler:function(){
-				flag1=this.shopList[0].checked;
-				flag2=this.shopList[1].checked;
-				flag3=this.shopList[2].checked;
-				if(flag1&&flag2&&flag3)
+				if(this.shopList[0].checked&&this.shopList[1].checked&&this.shopList[2].checked)
 					this.checkAll=true;
 				else
 					this.checkAll=false;
+				this.total=0;
+				this.shopList.forEach(function(ele){					
+					if(ele.checked)
+						this.vm.total+=ele.productPrice*ele.productQuantity;
+				});
 			},
 			deep:true
 		}

@@ -1,0 +1,4 @@
+--allow-file-access-from-files
+//如果读取json时报错"Cross origin requests are only supported for protocol schemes: http, data, chrome, chrome-extension, https, chrome-extension-resource."
+//请在浏览器快捷方式的"目标"末尾+空格+"--allow-file-access-from-files"
+//如："C:\Program Files (x86)\2345Soft\2345Explorer\2345Explorer.exe" --allow-file-access-from-files
