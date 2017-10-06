@@ -10,7 +10,11 @@ var vm=new Vue({
 		// 全选判定
 		checkAll:false,
 		// 总价
-		total:0
+		total:0,
+		// 弹窗的控制
+		delFlag:false,
+		// 删除的索引
+		delIndex:null
 	},
 	// 监听数据变化
 	watch:{
@@ -63,50 +67,96 @@ var vm=new Vue({
 			// 调用vue-resource插件的$http.get方法，then中第一个function为get成功方法，第二个方法为get失败方法
 			// vue-resource学习地址(来自第三方分享，并非本人创作，其内容带来的法律责任与灿灿无关，请自学筛选学习)：http://www.cnblogs.com/axl234/p/5899137.html
 			this.$http.get("data/cartData.json").then(function(res){
+				// 不知道为什么我总是获取失败，为了不影响演示，就在失败方法中获取了数据，成功方法仅为打印
+				// 如果有同学获取成功，可以console.log一下res然后获取正确的参数到shopList即可
 				console.log("成功");
+				// 失败方法
 			},function(res){
+				// 成功获取json内容
 				this.shopList=res.data.result.list;
 			});
 		},
+		// 调整数量的方法，flag判断加减
 		changeNumber:function(item,flag){
+			// 大于0为加
 			if(flag>0){
+				// item数量自增1
 				item.productQuantity++;
 			}
+			// 小于0
 			else{
+				// item数量自减1
 				item.productQuantity--;	
+				// 如果数量小于1
 				if(item.productQuantity<1)
+					// 始终赋值为1，则数量无法小于1
 					item.productQuantity=1;
 			}
 		},
+		// 选中方法item为选中的元素
 		select:function(item){
+			// 如果该item的checked属性为false或者不存在
 			if (!item.checked) {
+				// 则$set设置checked属性为true，并且加入对象的监听，如果直接item.checked=true，就无法监听，重点。
 				this.$set(item,"checked",true);
 			}
+			// checked为真
 			else
+				// 取反
 				item.checked=!item.checked;
 		},
+		// 全选方法，flag判断全选或者取消全选
 		selectAll:function(flag){
+			// 先在顶部获取到该vm势力，因为在forEach内部，通过打印this，发现作用域指向的是Windows对象
+			// 尽管在内部通过this.vm.同样可以获取到相同内容，但是显然与我们构思不符合，即不可取
 			var _this=this;
+			// 如果flag为真
 			if(flag){
+				// vm对象的checkAll属性赋值为真
 				this.checkAll=true;
+				// 遍历shopList属性，参数ele为当前遍历的对象
 				this.shopList.forEach(function(ele){
+					// 同上理，如果该对象不存在checked属性，或者为false
 					if (!ele.checked) {
+						// 赋值为真并且监听
 						_this.$set(ele,"checked",true);
 					}
-					else
-						ele.checked=true;
+					// 通过逻辑构思发现下面两行代码为多余，即else条件其实就是checked为true，不必要重复去赋值
+					// 保留下来给大家警示，一定要明晰自己的逻辑，尽量少做冗余的代码
+					// else
+					// 	  ele.checked=true;
 				});
 			}
+			// 如果flag为假，即取消全选
 			else{
+				// 反向操作
 				this.checkAll=false;
+				// 反向操作，再次强调：$set赋值整个Vue实例才会对其进行监听*3
 				this.shopList.forEach(function(ele){
-					if(!ele.checked){
+					// 判断条件与之前相反
+					if(ele.checked){
 						_this.$set(ele,"checked",false);
 					}
-					else
-						ele.checked=false;
+					// 同理，多余操作
+					// else
+					// 	ele.checked=false;
 				});
 			}
+		},
+		// 如老师所说，应该通过ajax后台删除，前台仅表现逻辑思维
+		// 删除按钮的方法
+		dele:function(item){
+			// 通过this.shopList.indexOf方法查找到item在该对象的索引并且保存下来
+			this.delIndex=this.shopList.indexOf(item);
+			// 控制弹窗的显示
+			this.delFlag=true;
+		},
+		// 删除商品的方法
+		deleShop:function(){
+			// 通过官方$delete方法，传入--参数一：欲参与删除的对象；参数二：删除的索引位置。实现删除
+			this.$delete(this.shopList,this.delIndex);
+			// 关闭弹窗的显示
+			this.delFlag=false;
 		}
 	}
 });

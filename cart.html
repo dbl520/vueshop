@@ -23,7 +23,7 @@
         <div class="container">
           <div class="cart">
             <div class="checkout-title">
-              <span>购物车-{{author}}</span>
+              <span>购物车-{{author}}<!-- 绑定的作者，即本人：灿灿 --></span>
             </div>
 
             <!-- table -->
@@ -42,7 +42,8 @@
                   <li v-for="item in shopList">
                     <div class="cart-tab-1">
                       <div class="cart-item-check">
-                        <a href="javascript:void 0" class="item-check-btn" @click="select(item)" v-bind:class="{'check':item.checked}">
+                      <!-- 为a标签绑定click事件，通过改变该item的checked属性来添加class'check' -->
+                      <a href="javascript:void 0" class="item-check-btn" @click="select(item)" v-bind:class="{'check':item.checked}">
                         </a>
                       </div>
                       <div class="cart-item-pic">
@@ -54,19 +55,23 @@
                       <div class="item-include">
                         <dl>
                           <dt>赠送:</dt>
+                          <!-- 嵌套v-for指令，添加text为赠送品名字的循环 -->
                           <dd v-for="give in item.parts" v-text="give.partsName"></dd>
                         </dl>
                       </div>
                     </div>
                     <div class="cart-tab-2">
+                      <!-- 传入单价并且过滤显示该内容 -->
                       <div class="item-price">{{item.productPrice|changePrice}}</div>
                     </div>
                     <div class="cart-tab-3">
                       <div class="item-quantity">
                         <div class="select-self select-self-open">
                           <div class="quantity">
+                            <!-- 为增减数量绑定click指令，执行增减操作 -->
                             <a class="layui-btn layui-btn-primary layui-btn-small" href="javascript:" @click="changeNumber(item,-1)"><i class="layui-icon">&#xe603;</i></a>
                             <input type="text" value="0" disabled v-model="item.productQuantity">
+                            <!-- 同上 -->
                             <a class="layui-btn layui-btn-primary layui-btn-small" href="javascript:" @click="changeNumber(item,1)"><i class="layui-icon">&#xe602;</i></a>
                           </div>
                         </div>
@@ -74,11 +79,14 @@
                       </div>
                     </div>
                     <div class="cart-tab-4">
+                      <!-- 总价的计算，并且过滤 -->
                       <div class="item-price-total">{{item.productPrice*item.productQuantity|changePrice}}</div>
                     </div>
                     <div class="cart-tab-5">
                       <div class="cart-item-operation">
-                        <a href="javascript:void 0" class="item-edit-btn">
+                        <!-- 绑定删除按钮的方法 -->
+                        <a href="javascript:void 0" class="layui-btn layui-btn-small layui-btn-primary" title="删除" @click="dele(item)">
+                          <i class="layui-icon">&#xe640;</i>
                         </a>
                       </div>
                     </div>
@@ -92,45 +100,55 @@
               <div class="cart-foot-l">
                 <div class="item-all-check">
                   <a>
+                    <!-- 绑定全选的方法 -->
                     <span class="item-check-btn" v-bind:class="{'check':checkAll}" @click="selectAll(true)">
                     </span>
+                    <!-- 绑定全选的方法，实现点击圆点或者字体都能全选 -->
                     <span style="cursor: pointer;" @click="selectAll(true)">全选</span>
                   </a>
                 </div>
                 <div class="item-all-del">
                   <a class="item-del-btn">
+                    <!-- 绑定取消全选的方法 -->
                     <span style="cursor: pointer;margin-left: 20px;" @click="selectAll(false)">取消全选</span>
                   </a>
                 </div>
               </div>
               <div class="cart-foot-r">
                 <div class="item-total">
+                  <!-- 事实计算总价，因为是total属性绑定到了每个item变化的watch中，所以能因为item的选中与否而进项实时变化 -->
                   总价: <span class="total-price">{{total|changePrice}}</span>
                 </div>
                 <div class="next-btn-wrap">
-                  <a href="javascrit:;" class="btn btn--red" style="width: 200px">结账</a>
+                  <a href="address.html" class="btn btn--red" style="width: 200px">结账</a>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        <div class="md-modal modal-msg md-modal-transition" id="showModal">
+        
+        <div class="md-modal modal-msg md-modal-transition" id="showModal" v-bind:class="{'md-show':delFlag}">
+        <!-- 通过delFlag控制弹窗和遮罩层的显示 -->
           <div class="md-modal-inner">
             <div class="md-top">
-              <button class="md-close">关闭</button>
+            <!-- 绑定关闭弹窗的事件 -->
+              <button class="md-close" @click="delFlag=false">关闭</button>
             </div>
             <div class="md-content">
               <div class="confirm-tips">
                 <p id="cusLanInfo">你确认删除此订单信息吗?</p>
               </div>
               <div class="btn-wrap col-2">
-                <button class="btn btn--m" id="btnModalConfirm">Yes</button>
-                <button class="btn btn--m btn--red" id="btnModalCancel">No</button>
+                <!-- 绑定删除商品的事件 -->
+                <button class="btn btn--m" id="btnModalConfirm" @click="deleShop()">Yes</button>
+                <!-- 绑定关闭弹窗的事件 -->
+                <button class="btn btn--m btn--red" id="btnModalCancel" @click="delFlag=false">No</button>
               </div>
             </div>
           </div>
         </div>
+        <!-- 绑定关闭弹窗的事件，在遮罩层绑定即可以在弹窗后点击遮罩层同样实现关闭弹窗 -->
+        <div class="md-overlay" v-if="delFlag" @click="delFlag=false"></div>
       </div>
     </div>
 
