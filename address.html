@@ -18,7 +18,7 @@
     </style>
 </head>
 <body>
-
+  <div id="app">
     <div class="container">
       <div class="checkout-addr">
         <!-- process step -->
@@ -33,16 +33,16 @@
 
         <!-- address list -->
         <div class="checkout-title">
-          <span>配送地址</span>
+          <span>配送地址-{{author}}</span>
         </div>
         <div class="addr-list-wrap">
           <div class="addr-list">
             <ul>
-              <li>
+              <li v-for="item in list">
                 <dl>
-                  <dt>JackBean</dt>
-                  <dd class="address">北京朝阳区朝阳公园</dd>
-                  <dd class="tel">13356576785</dd>
+                  <dt v-text="item.userName"></dt>
+                  <dd class="address">{{item.streetName}}</dd>
+                  <dd class="tel">{{item.tel}}</dd>
                 </dl>
                 <div class="addr-opration addr-edit">
                   <a href="javascript:;" class="addr-edit-btn">
@@ -55,9 +55,9 @@
                   </a>
                 </div>
                 <div class="addr-opration addr-set-default">
-                  <a href="javascript:;" class="addr-set-default-btn" ><i>设为默认</i></a>
+                  <a href="javascript:;" class="addr-set-default-btn"><i>设为默认</i></a>
                 </div>
-                <div class="addr-opration addr-default">默认地址</div>
+                <div class="addr-opration addr-default" v-if="item.isDefault">默认地址</div>
               </li>
 
               <li class="addr-new">
@@ -169,10 +169,11 @@
       </div>
     </div>
   </div>
-
+</div>
 
     <script src="js/lib/vue.min.js"></script>
     <script src="js/lib/vue-resource.js"></script>
+    <script type="text/javascript" src="address.js"></script>
 </body>
 </html>
 

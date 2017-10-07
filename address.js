@@ -1,0 +1,21 @@
+var vm = new Vue({
+	el:'#app',
+	data:{
+		author:'灿灿',
+		list:[],
+	},
+	mounted:function(){
+		this.$nextTick(function(){
+			this.getJson();
+		});
+	},
+	methods:{
+		getJson:function(){
+			this.$http.get('data/address.json').then(function(res){
+				console.log(res);
+			},function(res){
+				this.list=res.data.result;
+			});
+		}
+	}
+});
